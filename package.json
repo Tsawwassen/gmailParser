@@ -4,7 +4,7 @@
   "description": "Access a Gmail account and parse emails",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npx nodemon app.js"
   },
   "repository": {
     "type": "git",
