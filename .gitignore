@@ -5,3 +5,4 @@ package-lock.json
 stderr.txt
 stdout.txt
 credentials.json
+token.json
