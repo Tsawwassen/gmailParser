@@ -1,0 +1,6 @@
+node_modules/
+gmailParser.sublime-workspace
+gmailParser.sublime-project
+package-lock.json
+stderr.txt
+stdout.txt
