@@ -4,3 +4,4 @@ gmailParser.sublime-project
 package-lock.json
 stderr.txt
 stdout.txt
+credentials.json
