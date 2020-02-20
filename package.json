@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Tsawwassen/gmailParser/issues"
   },
-  "homepage": "https://github.com/Tsawwassen/gmailParser#readme"
+  "homepage": "https://github.com/Tsawwassen/gmailParser#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
