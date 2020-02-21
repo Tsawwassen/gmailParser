@@ -5,12 +5,14 @@ const express = require('express');
 const app = express();
 
 app.get('/', (req, res) => {
-	authorize(JSON.parse(CREDENTIALAS), getAuth);
-  res.send('Hello World!')
+	//authorize(JSON.parse(CREDENTIALAS), sendEmail);
+	authorize(JSON.parse(CREDENTIALAS), getEmail);
+  res.send('Hello World!');
 });
 
 app.listen(PORT, () => {
-  console.log('gmailParser app listening on port ' + PORT);
+  	console.log('gmailParser app listening on port ' + PORT);
+
 });
 
 
@@ -91,17 +93,34 @@ app.listen(PORT, () => {
 	    });
 	}
 
-	function getAuth(auth){
+	function sendEmail(auth){
 
 
-	    var Mail = require('./createMail.js');
-	    var obj = new Mail(auth, "mitchell.rian.smith@gmail.com", 'Test Subject', 'Test Body', 'mail', '');
+	    var Mail = require('./class/createMail.js');
+	    var obj = new Mail(auth, "mitchell.rian.smith@gmail.com", 'Test Subject3', 'Test Body', 'mail', '');
 	    
 	    //'mail' is the task, if not passed it will save the message as draft.
 	    //attachmentSrc array is optional.
 	    obj.makeBody();
 	    //This will send the mail to the recipent.
 	}
+
+	function getEmail(auth){
+    	var Check = require('./class/Check.js');
+    	//console.log(Check);
+    	var inbox = new Check(auth);
+    	//emailBody = inbox.checkForMediumMails();
+    	inbox.checkForMediumMails();
+   
+    /*	if(emailBody != -1){
+    		console.log("app.js->getEmail emailBody - " + emailBody);
+    	} else {
+    		console.log("error when parsing emails");
+    	}*/ //Sync problem with the above logs
+
+
+    }
+
 
 //Google API email Stuff - End
 ////////////////
