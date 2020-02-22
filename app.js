@@ -104,23 +104,24 @@ app.listen(PORT, () => {
 	    obj.makeBody();
 	    //This will send the mail to the recipent.
 	}
-
+	//Get unread emails sent to mitchell.test.smith@gmail.com from mitchell.rian.smith@gmail.com
 	function getEmail(auth){
     	var Check = require('./class/Check.js');
-    	//console.log(Check);
     	var inbox = new Check(auth);
-    	//emailBody = inbox.checkForMediumMails();
-    	inbox.checkForMediumMails();
-   
-    /*	if(emailBody != -1){
-    		console.log("app.js->getEmail emailBody - " + emailBody);
-    	} else {
-    		console.log("error when parsing emails");
-    	}*/ //Sync problem with the above logs
 
+    	inbox.checkForMediumMails(printEmailBody);
 
     }
+    //Callback function used to print content of each email.
+    function printEmailBody(body){
 
+    	if(body != -1){
+    		console.log(body);
+    	} else {
+    		//Should probably have a better way of showing what the error is
+    		console.log("error when parsing emails or no email to parse");
+    	}
+    }
 
 //Google API email Stuff - End
 ////////////////
