@@ -4,10 +4,14 @@ var CREDENTIALAS; //Variable used to store GoogleAPI credentials
 const express = require('express');
 const app = express();
 
+// Add or remove comments on authorize function calls to send or get emails
 app.get('/', (req, res) => {
+	//Send email function
 	//authorize(JSON.parse(CREDENTIALAS), sendEmail);
+
+	//Get/Parse email function
 	authorize(JSON.parse(CREDENTIALAS), getEmail);
-  res.send('Hello World!');
+  	res.send('Hello World!');
 });
 
 app.listen(PORT, () => {
@@ -93,34 +97,44 @@ app.listen(PORT, () => {
 	    });
 	}
 
+	//Send an email to mitchell.rian.smith@gmail.com from mitchell.test.smith@gmail.com
 	function sendEmail(auth){
-
-
 	    var Mail = require('./class/createMail.js');
 	    var obj = new Mail(auth, "mitchell.rian.smith@gmail.com", 'Test Subject3', 'Test Body', 'mail', '');
 	    
 	    //'mail' is the task, if not passed it will save the message as draft.
-	    //attachmentSrc array is optional.
 	    obj.makeBody();
 	    //This will send the mail to the recipent.
 	}
+
 	//Get unread emails sent to mitchell.test.smith@gmail.com from mitchell.rian.smith@gmail.com
 	function getEmail(auth){
     	var Check = require('./class/Check.js');
     	var inbox = new Check(auth);
 
-    	inbox.checkForMediumMails(printEmailBody);
+    	inbox.checkForMediumMails(function (email){
+    		if(email != -1){
+    			//From here we can use the information from body to parse the array for values, and add a record to a database.
+    			console.log(email);
+
+    			//Assuming the email was parsed and added to the database, mark the email as read
+    			markEmailAsRead(auth, email.id);
+	    	} else {
+	    		//Should probably have a better way of showing what the error is
+	    		console.log("error when parsing emails or no email to parse");
+	    	}
+    	});
 
     }
-    //Callback function used to print content of each email.
-    function printEmailBody(body){
 
-    	if(body != -1){
-    		console.log(body);
-    	} else {
-    		//Should probably have a better way of showing what the error is
-    		console.log("error when parsing emails or no email to parse");
-    	}
+    //Mark Email as read for given auth and message ID
+    function markEmailAsRead(auth, msgId){
+
+    	var Check = require('./class/Check.js');
+    	var inbox = new Check(auth);
+
+    	inbox.markEmailAsRead(msgId);
+
     }
 
 //Google API email Stuff - End

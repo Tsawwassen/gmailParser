@@ -50,6 +50,19 @@ class Check{
         });        
     }
 
+    // Mark emails as read
+    // Function currently moves email to trash, and does not mark the email as read.
+    // The checkMail function will not pick up email in the trash, but would have been nice to move to specific folder or mark email as read
+    markEmailAsRead (msgId){
+        this.gmail.users.messages.trash({
+            'userId': this.me,
+            'id': msgId
+            }, (err, res) => {
+                console.log("moved email to trash");
+
+        })
+    }
+
     //getMail function retrieves the mail body and parses it for useful content.
     getMail(msgId, callback){
         
@@ -101,7 +114,8 @@ class Check{
                 }
                 //The return array still has the "On DATE Name<email> wrote" line.
                 //TODO work on a way to remove that line
-                return callback(returnLines);
+                
+                return callback({ "id" : msgId, "body" : returnLines});
             }
         });
     }
