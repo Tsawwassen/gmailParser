@@ -31,6 +31,8 @@ run 'npm run install' from project root
 
 
 ## Credits
+Using the Google API and recomended in the below link
+	https://medium.com/@parakh.js/how-to-use-gmail-api-with-node-js-part-1-b17097a64990
 
 
 #### Anything else that seems useful

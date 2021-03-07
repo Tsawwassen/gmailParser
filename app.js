@@ -1,8 +1,7 @@
 const PORT = 8080;
 var CREDENTIALAS; //Variable used to store GoogleAPI credentials
-
-const express = require('express');
-const app = express();
+var express = require('express');
+var app = express();
 
 // Add or remove comments on authorize function calls to send or get emails
 app.get('/', (req, res) => {
@@ -10,8 +9,8 @@ app.get('/', (req, res) => {
 	//authorize(JSON.parse(CREDENTIALAS), sendEmail);
 
 	//Get/Parse email function
-	authorize(JSON.parse(CREDENTIALAS), getEmail);
-  	res.send('Hello World!');
+	// authorize(JSON.parse(CREDENTIALAS), getEmail);
+  	 res.send('Hello World!');
 });
 
 app.listen(PORT, () => {
@@ -22,9 +21,11 @@ app.listen(PORT, () => {
 
 ////////////
 //Google API email Stuff - Start
-	const fs = require('fs');
-	const readline = require('readline');
-	const {google} = require('googleapis');
+	//import { readFile, writeFile } from 'fs';
+	var fs = require('fs');
+	var readFile = fs.readFile;
+	var createInterface =  require('readline');
+	var google =  require('googleapis');
 
 
 	// If modifying these scopes, delete token.json.
@@ -35,8 +36,18 @@ app.listen(PORT, () => {
 	// time.
 	const TOKEN_PATH = 'token.json';
 
+	//Send an email to mitchell.rian.smith@gmail.com from mitchell.test.smith@gmail.com
+	function sendEmail(auth){
+		var Mail = require('./class/createMail.js');
+		var obj = new Mail(auth, "mitchell.rian.smith@gmail.com", 'Test Subject3', 'Test Body', 'mail', '');
+			
+		//'mail' is the task, if not passed it will save the message as draft.
+		obj.makeBody();
+		//This will send the mail to the recipent.
+	}
+
 	// Load client secrets from a local file.
-	fs.readFile('credentials.json', (err, content) => {
+	readFile('credentials.json', (err, content) => {
 	    if(err){
 	        return console.log('Error loading client secret file:', err);
 	    }
@@ -56,7 +67,7 @@ app.listen(PORT, () => {
 	    const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
 	    // Check if we have previously stored a token.
-	    fs.readFile(TOKEN_PATH, (err, token) => {
+	    readFile(TOKEN_PATH, (err, token) => {
 	        if(err){
 	            return getNewToken(oAuth2Client, callback);
 	        }
@@ -78,7 +89,7 @@ app.listen(PORT, () => {
 	        scope: SCOPES,
 	    });
 	    console.log('Authorize this app by visiting this url:', authUrl);
-	    const rl = readline.createInterface({
+	    const rl = createInterface({
 	        input: process.stdin,
 	        output: process.stdout,
 	    });
@@ -88,7 +99,7 @@ app.listen(PORT, () => {
 	        if (err) return console.error('Error retrieving access token', err);
 	        oAuth2Client.setCredentials(token);
 	        // Store the token to disk for later program executions
-	        fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+	        writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
 	            if (err) return console.error(err);
 	            console.log('Token stored to', TOKEN_PATH);
 	        });
@@ -97,15 +108,7 @@ app.listen(PORT, () => {
 	    });
 	}
 
-	//Send an email to mitchell.rian.smith@gmail.com from mitchell.test.smith@gmail.com
-	function sendEmail(auth){
-	    var Mail = require('./class/createMail.js');
-	    var obj = new Mail(auth, "mitchell.rian.smith@gmail.com", 'Test Subject3', 'Test Body', 'mail', '');
-	    
-	    //'mail' is the task, if not passed it will save the message as draft.
-	    obj.makeBody();
-	    //This will send the mail to the recipent.
-	}
+
 
 	//Get unread emails sent to mitchell.test.smith@gmail.com from mitchell.rian.smith@gmail.com
 	function getEmail(auth){
