@@ -6,7 +6,7 @@ var app = express();
 // Add or remove comments on authorize function calls to send or get emails
 app.get('/', (req, res) => {
 	//Send email function
-	//authorize(JSON.parse(CREDENTIALAS), sendEmail);
+	authorize(JSON.parse(CREDENTIALAS), sendEmail);
 
 	//Get/Parse email function
 	// authorize(JSON.parse(CREDENTIALAS), getEmail);
@@ -24,8 +24,9 @@ app.listen(PORT, () => {
 	//import { readFile, writeFile } from 'fs';
 	var fs = require('fs');
 	var readFile = fs.readFile;
-	var createInterface =  require('readline');
-	var google =  require('googleapis');
+	var writeFile = fs.writeFile;
+	const {createInterface} =  require('readline');
+	const {google} =  require('googleapis');
 
 
 	// If modifying these scopes, delete token.json.
@@ -39,13 +40,17 @@ app.listen(PORT, () => {
 	//Send an email to mitchell.rian.smith@gmail.com from mitchell.test.smith@gmail.com
 	function sendEmail(auth){
 		var Mail = require('./class/createMail.js');
-		var obj = new Mail(auth, "mitchell.rian.smith@gmail.com", 'Test Subject3', 'Test Body', 'mail', '');
+		var htmlBody = makeHTMLBody();
+		var obj = new Mail(auth, "mitchell.rian.smith@gmail.com", 'Test Subject3', htmlBody, 'mail', '');
 			
 		//'mail' is the task, if not passed it will save the message as draft.
 		obj.makeBody();
 		//This will send the mail to the recipent.
 	}
-
+	//Use this function to build the HTML body for the email
+	function makeHTMLBody(){
+		return '<h1>Test Body</h1><table><tr><td>1</td></tr><tr><td>2</td></tr></table>';
+	}
 	// Load client secrets from a local file.
 	readFile('credentials.json', (err, content) => {
 	    if(err){
@@ -63,11 +68,12 @@ app.listen(PORT, () => {
 	 * @param {function} callback The callback to call with the authorized client.
 	 */
 	function authorize(credentials, callback) {
-	    const {client_secret, client_id, redirect_uris} = credentials.installed;
-	    const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
-
-	    // Check if we have previously stored a token.
-	    readFile(TOKEN_PATH, (err, token) => {
+		const {client_secret, client_id, redirect_uris} = credentials.installed;
+		
+		const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+		
+	     // Check if we have previously stored a token.
+	     readFile(TOKEN_PATH, (err, token) => {
 	        if(err){
 	            return getNewToken(oAuth2Client, callback);
 	        }
@@ -98,12 +104,17 @@ app.listen(PORT, () => {
 	        oAuth2Client.getToken(code, (err, token) => {
 	        if (err) return console.error('Error retrieving access token', err);
 	        oAuth2Client.setCredentials(token);
-	        // Store the token to disk for later program executions
-	        writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+			// Store the token to disk for later program executions
+			console.log(token);
+			console.log(token.class)
+
+			//TODO : This writeFile is not working.
+			// Temp Fix : Console logged the created token, and put it into the token.json file to make the app work
+	        writeFile(TOKEN_PATH, token, (err) => {
 	            if (err) return console.error(err);
 	            console.log('Token stored to', TOKEN_PATH);
 	        });
-	        callback(oAuth2Client);
+			callback(oAuth2Client);
 	        });
 	    });
 	}

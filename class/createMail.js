@@ -29,7 +29,7 @@ class CreateMail{
 		if(this.attatchment.length){
 			var mail = new mailComposer({
 				to: this.to,
-				text: this.body,
+				html: this.body,
 				subject: this.sub,
 				textEncoding: "base64",
 				attachments: arr
@@ -39,7 +39,7 @@ class CreateMail{
 
 			var mail = new mailComposer({
 				to: this.to,
-				text: this.body,
+				html: this.body,
 				subject: this.sub,
 				textEncoding: "base64"
 			});
