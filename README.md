@@ -33,6 +33,8 @@ run 'npm run install' from project root
 ## Credits
 Using the Google API and recomended in the below link
 	https://medium.com/@parakh.js/how-to-use-gmail-api-with-node-js-part-1-b17097a64990
+	Div table 
+		https://stackoverflow.com/questions/3053205/how-create-table-only-using-div-tag-and-css
 
 
 #### Anything else that seems useful
